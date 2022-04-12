@@ -1,42 +1,35 @@
 import React, { useState } from 'react';
-import { useCreateUserWithEmailAndPassword, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import auth from '../../firebase.init';
 
 const Shipment = () => {
+    const [user] =useAuthState(auth);
+
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [address, setAddress] = useState('');
+    const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
-
-    const [createUserWithEmailAndPassword, user] = useCreateUserWithEmailAndPassword(auth);
-
-    // const navigate = useNavigate();
 
     const handleNameBlur = event => {
         setName(event.target.value);
     }
-    const handleEmailBlur = event => {
-        setEmail(event.target.value);
+
+    const handleAddressdBlur = event => {
+        setAddress(event.target.value)
     }
 
-    const handlePasswordBlur = event => {
-        setPassword(event.target.value)
-    }
-
-    const handleConfirmPasswordBlur = event => {
-        setConfirmPassword(event.target.value)
+    const handlePhoneBlur = event => {
+        setPhone(event.target.value)
     }
 
     const handleCreateUser = event => {
         event.preventDefault();
+        const shipping = {name,email,address, phone};
+        console.log(shipping);
     }
-
-
-
-
 
     return (
         <div className='form-container'>
@@ -44,23 +37,23 @@ const Shipment = () => {
                 <h2 className='form-title'>Shipping Information</h2>
                 <form action="" onSubmit={handleCreateUser}>
                     <div className='input-group'>
-                        <label htmlFor="name">Name</label>
-                        <input onBlur={handleNameBlur} type="name" name='name' id='' required />
+                        <label htmlFor="name">Your Name</label>
+                        <input onBlur={handleNameBlur} type="text" name='name' id='' required />
                     </div>
                     <div className='input-group'>
-                        <label htmlFor="email">Email</label>
-                        <input onBlur={handleEmailBlur} type="email" name='email' id='' required />
+                        <label htmlFor="email">Your Email</label>
+                        <input value={user?.email} type="email" name='email' id='' required />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="password">Password</label>
-                        <input onBlur={handlePasswordBlur} type="password" name='password' id='' required />
+                        <label htmlFor="Address"> Your Address</label>
+                        <input onBlur={handleAddressdBlur} type="text" name='Address' id='' required />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="confirm-password">Confirm Password</label>
-                        <input onBlur={handleConfirmPasswordBlur} type="password" name='confirm-password' id='' required />
+                        <label htmlFor="phone">Phone Number</label>
+                        <input onBlur={handlePhoneBlur} type="text" name='Phone' id='' required />
                     </div>
                     <p style={{ color: 'red ' }}>{error}</p>
-                    <input className='form-submit' type="submit" value="Sign Up" required />
+                    <input className='form-submit' type="submit" value="Add Shipping" required />
                 </form>
             </div>
         </div>

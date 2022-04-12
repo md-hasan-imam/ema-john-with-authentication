@@ -1,45 +1,48 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../firebase.init';
 import './SignUp.css';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 
 const SignUp = () => {
 
-    const [email, setEmail]= useState('');
-    const [password, setPassword]= useState('');
-    const [confirmPassword, setConfirmPassword]= useState('');
-    const [error, setError]= useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
 
-    const [ createUserWithEmailAndPassword, user] = useCreateUserWithEmailAndPassword(auth);
+    const [createUserWithEmailAndPassword, user] = useCreateUserWithEmailAndPassword(auth);
 
-    const navigate =useNavigate();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
 
-    const handleEmailBlur =event =>{
+
+    const handleEmailBlur = event => {
         setEmail(event.target.value);
     }
 
-    const handlePasswordBlur=event=>{
+    const handlePasswordBlur = event => {
         setPassword(event.target.value)
     }
 
-    const handleConfirmPasswordBlur= event=> {
+    const handleConfirmPasswordBlur = event => {
         setConfirmPassword(event.target.value)
     }
 
-    if(user){
-        navigate('/shop');
-    }
-    const handleCreateUser = event =>{
+    const handleCreateUser = event => {
         event.preventDefault();
-        if(password !== confirmPassword){
+        if (password !== confirmPassword) {
             setError(" Your two passwords didn't matched")
         }
-        if(password.length <6){
+        if (password.length < 6) {
             setError('password must be 6 characters or longer');
             return;
         }
         createUserWithEmailAndPassword(email, password);
+    }
+    if (user) {
+        navigate(from, { replace: true });
     }
 
 
@@ -60,7 +63,7 @@ const SignUp = () => {
                         <label htmlFor="confirm-password">Confirm Password</label>
                         <input onBlur={handleConfirmPasswordBlur} type="password" name='confirm-password' id='' required />
                     </div>
-                    <p style={{color:'red '}}>{error}</p>
+                    <p style={{ color: 'red ' }}>{error}</p>
                     <input className='form-submit' type="submit" value="Sign Up" required />
                 </form>
                 <p className='instruction'>Already have an Account ? <Link className='form-link' to='/login'>Login</Link></p>
